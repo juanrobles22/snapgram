@@ -12,7 +12,7 @@ jobs:
 
       - name: Inject Firebase config
         run: |
-          cp snapgram_template.html index.html
+          cp index.html built.html && mv built.html index.html
           sed -i "s|%%API_KEY%%|${{ secrets.FIREBASE_API_KEY }}|g" index.html
           sed -i "s|%%AUTH_DOMAIN%%|${{ secrets.FIREBASE_AUTH_DOMAIN }}|g" index.html
           sed -i "s|%%DB_URL%%|${{ secrets.FIREBASE_DB_URL }}|g" index.html

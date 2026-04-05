@@ -1,0 +1,30 @@
+name: Deploy SnapGram
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Inject Firebase config
+        run: |
+          cp snapgram_template.html index.html
+          sed -i "s|%%API_KEY%%|${{ secrets.FIREBASE_API_KEY }}|g" index.html
+          sed -i "s|%%AUTH_DOMAIN%%|${{ secrets.FIREBASE_AUTH_DOMAIN }}|g" index.html
+          sed -i "s|%%DB_URL%%|${{ secrets.FIREBASE_DB_URL }}|g" index.html
+          sed -i "s|%%PROJECT_ID%%|${{ secrets.FIREBASE_PROJECT_ID }}|g" index.html
+          sed -i "s|%%STORAGE_BUCKET%%|${{ secrets.FIREBASE_STORAGE_BUCKET }}|g" index.html
+          sed -i "s|%%SENDER_ID%%|${{ secrets.FIREBASE_SENDER_ID }}|g" index.html
+          sed -i "s|%%APP_ID%%|${{ secrets.FIREBASE_APP_ID }}|g" index.html
+          sed -i "s|%%MEASUREMENT_ID%%|${{ secrets.FIREBASE_MEASUREMENT_ID }}|g" index.html
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: .
+          exclude_assets: 'snapgram_template.html,.github'
